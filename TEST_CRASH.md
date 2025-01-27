@@ -41,8 +41,8 @@ cmake3 --build . --target all -v && cmake3 --install . --config Debug
 
 ### To compile & run the test example
 ```bash
-export 'CFLAGS= -O2 -flto=auto -ffat-lto-objects -m64 -mcpu=power9 -mtune=power9 -fno-strict-aliasing -fPIC'
-export 'CXXFLAGS= -O2 -flto=auto -ffat-lto-objects -m64 -mcpu=power9 -mtune=power9 -fno-strict-aliasing -fPIC'
+export 'CFLAGS= -DHAVE_ABSEIL -O2 -flto=auto -ffat-lto-objects -m64 -mcpu=power9 -mtune=power9 -fno-strict-aliasing -fPIC'
+export 'CXXFLAGS= -DHAVE_ABSEIL -O2 -flto=auto -ffat-lto-objects -m64 -mcpu=power9 -mtune=power9 -fno-strict-aliasing -fPIC'
 export 'LDFLAGS= -Wl,-z,relro -Wl,--as-needed -Wl,-z,now '
 
 cd opentelemetry-cpp/example && mkdir build && cd build
