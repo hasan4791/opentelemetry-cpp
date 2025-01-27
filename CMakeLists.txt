@@ -69,6 +69,8 @@ else()
     set(ARCH riscv)
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x.*|S390X.*)")
     set(ARCH s390x)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -march=z14 -mtune=z15")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -march=z14 -mtune=z15")
   else()
     message(
       FATAL_ERROR
