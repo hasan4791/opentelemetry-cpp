@@ -1,5 +1,7 @@
 # Debug crash in ppc64le
 
+This branch is created from the commit id: 9f3a8eeb1952c75d6d5f74aa4c5e6ed21e1318a8, which is being used in ceph as of now
+
 Following are the exported flags used in ceph for compiling open-telemetry library
 ``` bash
 export 'CFLAGS= -O2 -flto=auto -ffat-lto-objects -fexceptions -g -grecord-gcc-switches -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong  -m64 -mcpu=power9 -mtune=power9 -fasynchronous-unwind-tables -fstack-clash-protection'
@@ -50,3 +52,13 @@ cmake3 ..
 cmake3 --build . --target test -v
 ./test_crash/test
 ```
+
+## Observations
+
+Though currently, SIGABRT is being observed instead of SIGILL which is being seen on Ceph v19, the backtrace looks similar to the one we have got so far. Also by removing the following CXX/LD flags from the test binary compilation, the core dump isn't observed
+
+1. -DHAVE_ABSEIL -> Newely introduced in ceph v19.2.0
+2. -flto=auto
+3. -fno-strict-aliasing
+4. -fPIC
+5. -Wl,-z,now -> From LDFLAGS
