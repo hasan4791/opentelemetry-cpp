@@ -1,3 +1,22 @@
+#include_directories(/root/install/include)
+
+# require c++20
+set(CMAKE_CXX_STANDARD 20)
+
+# Set LDFLAG
+set(CMAKE_LD_FLAGS "-Wl,-z,relro -Wl,--as-needed -Wl,-z,now")
+
+# Set C/C++ flags
+set(CMAKE_C_FLAGS "-DHAVE_ABSEIL -O2 -flto=auto -ffat-lto-objects -fno-strict-aliasing -fPIC")
+set(CMAKE_CXX_FLAGS "-DHAVE_ABSEIL -O2 -flto=auto -ffat-lto-objects -fno-strict-aliasing -fPIC")
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+  set(ARCH ppc64le)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mcpu=power9 -mtune=power9")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mcpu=power9 -mtune=power9")
+endif()
+
+add_subdirectory(test_crash)
+
 add_subdirectory(common)
 include_directories(common)
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)

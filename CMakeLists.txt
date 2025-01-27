@@ -30,6 +30,9 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/third_party_release")
   endforeach()
 endif()
 
+set(CMAKE_C_FLAGS "-O2 -flto=auto -ffat-lto-objects")
+set(CMAKE_CXX_FLAGS "-O2 -flto=auto -ffat-lto-objects")
+
 if(DEFINED ENV{ARCH})
   # Architecture may be specified via ARCH environment variable
   set(ARCH $ENV{ARCH})
@@ -56,6 +59,8 @@ else()
     set(ARCH arm)
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
     set(ARCH ppc64le)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64 -mcpu=power9 -mtune=power9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -mcpu=power9 -mtune=power9")
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64")
     set(ARCH ppc64)
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(mips.*|MIPS.*)")
@@ -71,6 +76,9 @@ else()
   endif()
 endif()
 message(STATUS "Building for architecture ARCH=${ARCH}")
+
+# Set LDFLAG
+set(CMAKE_LD_FLAGS "-Wl,-z,relro -Wl,--as-needed -Wl,-z,now")
 
 # Autodetect vcpkg toolchain
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
